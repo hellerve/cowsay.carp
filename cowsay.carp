@@ -1,7 +1,7 @@
 (relative-include "support.h")
 (register read-all-stdin (Fn [] String))
 
-(def cow (String.join @"\n" &[
+(def cow (String.join "\n" &[
     @"        \\   ^__^"
     @"         \\  (oo)\\_______"
     @"            (__)\\       )\\/\\"
@@ -18,7 +18,7 @@
     (if (> ln 1)
       (do
         (for [i 1 ln]
-          (set! s (String.join @" " &[s @(System.get-arg i)])))
+          (set! s (String.join " " &[s @(System.get-arg i)])))
         (String.trim &s))
       (read-all-stdin))))
 
@@ -38,14 +38,14 @@
 
 (defn bubblify [s]
   (if (< (length &s) LEN)
-    (String.join @"" &[
+    (String.join "" &[
       @" < "
       s
       @" >"
     ])
     (let [spl (partition s)
           ln (Int.dec (Array.length &spl))]
-      (String.join @"\n"
+      (String.join "\n"
         &(Array.zip
           &(fn [x i]
             (case @i
@@ -58,7 +58,7 @@
 (defn cowsayify [s]
   (let [sep-up (String.repeat (Int.min (+ (length &s) 2) (+ LEN 2)) "_")
         sep-down (String.repeat (Int.min (+ (length &s) 2) (+ LEN 2)) "-")]
-    (String.join @"" &[
+    (String.join "" &[
       @"  "
       sep-up
       @"\n"
