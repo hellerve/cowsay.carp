@@ -26,13 +26,13 @@
   (let-do [res []]
     (while (> (length &s) 0)
       (let [mln (Int.min (length &s) LEN)]
-        (let-do [pref (prefix-string &s mln)
+        (let-do [pref (prefix &s mln)
                  space-idx (Pattern.find #"\s[^\s]+$" &pref)
                  tln (if (> space-idx -1) (Int.min mln (Int.inc space-idx)) mln)
                  newline-idx (String.index-of &pref \newline)
                  ln (if (> newline-idx -1) (Int.min tln (Int.inc newline-idx)) tln)]
-          (Array.push-back! &res (trim &(prefix-string &pref ln)))
-          (set! s (suffix-string &s ln)))))
+          (Array.push-back! &res (trim &(prefix &pref ln)))
+          (set! s (suffix &s ln)))))
     res)
 )
 

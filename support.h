@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <core.h>
-
 String read_MINUS_all_MINUS_stdin() {
   char buf[1024];
   size_t size = 1;
