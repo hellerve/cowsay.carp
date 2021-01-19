@@ -13,51 +13,51 @@
 (def LEN 47)
 
 (defn arg-str []
-  (let [ln (System.get-args-len)
+  (let [ln (StaticArray.length &System.args)
         s @""]
     (if (> ln 1)
       (do
         (for [i 1 ln]
-          (set! s (String.join " " &[s @(System.get-arg i)])))
+          (set! s (String.join " " &[s @(StaticArray.unsafe-nth &System.args i)])))
         (String.trim &s))
       (read-all-stdin))))
 
 (defn partition [s]
   (let-do [res []]
     (while (> (length &s) 0)
-      (let [mln (Int.min (length &s) LEN)]
+      (let [mln (min (length &s) LEN)]
         (let-do [pref (prefix &s mln)
                  space-idx (Pattern.find #"\s[^\s]+$" &pref)
-                 tln (if (> space-idx -1) (Int.min mln (Int.inc space-idx)) mln)
+                 tln (if (> space-idx -1) (min mln (inc space-idx)) mln)
                  newline-idx (String.index-of &pref \newline)
-                 ln (if (> newline-idx -1) (Int.min tln (Int.inc newline-idx)) tln)]
+                 ln (if (> newline-idx -1) (min tln (inc newline-idx)) tln)]
           (Array.push-back! &res (trim &(prefix &pref ln)))
           (set! s (suffix &s ln)))))
     res)
 )
 
 (defn bubblify [s]
-  (if (< (length &s) LEN)
+  (if (and (< (length &s) LEN) (= -1 (String.index-of &s \newline)))
     (String.join "" &[
       @" < "
       s
       @" >"
     ])
     (let [spl (partition s)
-          ln (Int.dec (Array.length &spl))]
+          ln (dec (Array.length &spl))]
       (String.join "\n"
         &(Array.zip
           &(fn [x i]
             (case @i
-              0  (fmt " / %-47s \\" x)
-              ln (fmt " \\ %-47s /" x)
-                 (fmt " | %-47s |" x)))
+              0  (fmt " / %-47s \\ " x)
+              ln (fmt " \\ %-47s / " x)
+                 (fmt " | %-47s | " x)))
           &spl
-          &(Array.range 0 ln 1))))))
+          &(Array.range-or-default 0 ln 1))))))
 
 (defn cowsayify [s]
-  (let [sep-up (String.repeat (Int.min (+ (length &s) 2) (+ LEN 2)) "_")
-        sep-down (String.repeat (Int.min (+ (length &s) 2) (+ LEN 2)) "-")]
+  (let [sep-up (String.repeat (+ LEN 2) "_")
+        sep-down (String.repeat (+ LEN 2) "-")]
     (String.join "" &[
       @"  "
       sep-up
